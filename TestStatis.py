@@ -1,18 +1,19 @@
-import hmac
+from cryptography.hazmat.primitives import hashes, hmac
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
-class CryptoService:
 
-    supported_algs = {
-        "sha256": ("HMAC", "sha256"),
-        "sha512": ("HMAC", "sha512")
-    }
+# =====================================================
+# TEST 1: List dengan indeks langsung
+# =====================================================
 
-    @classmethod
-    def execute(cls, alg):
-        function, algorithm = cls.supported_algs[alg]
+def test_list_index():
+    supported_algs = [
+        hashes.SHA256(),
+        hashes.SHA512()
+    ]
 
-        result = hmac.new(
-            b"secret",
-            b"message",
-            digestmod=algorithm
-        )
+    algorithm = supported_algs[0]
+
+    h = hmac.HMAC(b"secret-key", algorithm)
+    h.update(b"Hello World")
+    signature = h.finalize()
